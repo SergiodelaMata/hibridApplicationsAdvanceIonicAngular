@@ -1,0 +1,7 @@
+{
+  "name": "hibridApplicationsAdvanceIonicAngular",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
