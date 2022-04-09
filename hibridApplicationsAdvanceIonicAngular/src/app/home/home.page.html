@@ -1,20 +1,112 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
+<ion-app>
+  <ion-header>
   </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+  <ion-content class="ion-padding" color="light">
+    <ion-row style="justify-content: center; align-items: center">
+      <ion-text color="dark">
+        <h1 style="text-align: center">
+          Calcule su importe individual
+        </h1>
+      </ion-text>
+    </ion-row>
+    <form (ngSubmit)="calculate()">
+      <ion-grid>
+        <ion-row>
+          <ion-col size-xs=12 size-sm=6 size-md=6 size-lg=4 size-xl=3 offset-lg=2 offset-xl=3>
+            <ion-item color="dark">
+              <ion-label>Importe total:</ion-label>
+              <ion-input type="number" [(ngModel)]="cost.totalImport" name="totalImport" required></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size-xs=12 size-sm=6 size-md=6 size-lg=4 size-xl=3>
+            <ion-item color="dark">
+              <ion-label>Nº comensales:</ion-label>
+              <ion-input type="number" [(ngModel)]="cost.numberPeople" name="numberPeople" required></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size-xs=12 size-sm=12 size-md=12 size-lg=8 size-xl=6 offset-lg=2 offset-xl=3>
+            <ion-list>
+              <ion-text color="dark">
+                <h3 style="text-align:center;">
+                  Seleccione como desea introducir su propina:
+                </h3>
+              </ion-text>
+              <ion-radio-group [(ngModel)]="selectedProp" (ionChange)="showSpecificDivProp($event)" name="prop">
+                <ion-row>
+                  <ion-col size=6>
+                    <ion-item color="dark">
+                      <ion-label>Propinas prefijadas</ion-label>
+                      <ion-radio value="propPref" name="propPref"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size=6>
+                    <ion-item color="dark">
+                      <ion-label>Propinas en rango</ion-label>
+                      <ion-radio value="propRange" name="propRange"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-radio-group>
+              <ion-list id="propRef" style="display:none;">
+                <ion-list-header>
+                  <h6>
+                    Seleccione el porcentaje de propina que desea proporcionar:
+                  </h6>
+                </ion-list-header>
+                <ion-item>
+                  <ion-label>Porcentaje:</ion-label>
+                  <ion-select [(ngModel)]="cost.propPrefPercentage" name="propPrefPercentage" placeholder="0%">
+                    <ion-select-option value="0">0%</ion-select-option>
+                    <ion-select-option value="5">5%</ion-select-option>
+                    <ion-select-option value="10">10%</ion-select-option>
+                    <ion-select-option value="15">15%</ion-select-option>
+                    <ion-select-option value="20">20%</ion-select-option>
+                    <ion-select-option value="25">25%</ion-select-option>
+                    <ion-select-option value="30">30%</ion-select-option>
+                    <ion-select-option value="35">35%</ion-select-option>
+                    <ion-select-option value="40">40%</ion-select-option>
+                    <ion-select-option value="45">45%</ion-select-option>
+                    <ion-select-option value="50">50%</ion-select-option>
+                    <ion-select-option value="55">55%</ion-select-option>
+                    <ion-select-option value="60">60%</ion-select-option>
+                    <ion-select-option value="65">65%</ion-select-option>
+                    <ion-select-option value="70">70%</ion-select-option>
+                    <ion-select-option value="75">75%</ion-select-option>
+                    <ion-select-option value="80">80%</ion-select-option>
+                    <ion-select-option value="85">85%</ion-select-option>
+                    <ion-select-option value="90">90%</ion-select-option>
+                    <ion-select-option value="95">95%</ion-select-option>
+                    <ion-select-option value="100">100%</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
+              <ion-list id="propRange" style="display:none;">
+                <ion-list-header>
+                  <h6>
+                    Seleccione el porcentaje de propina que desea proporcionar:
+                  </h6>
+                </ion-list-header>
+                <ion-item>
+                  <ion-label>Porcentaje:</ion-label>
+                  <ion-range min="0" max="100" step="1" [(ngModel)]="cost.propRangePercentage" name="propRangePercentage" pin=true>
+                    <ion-label slot="start">0%</ion-label>
+                    <ion-label slot="end">100%</ion-label>
+                  </ion-range>
+                </ion-item>
+              </ion-list>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-xs=12 col-sm=12 size-md=8 size-lg=6 size-xl=4 offset-md=2 offset-lg=3 offset-xl=4>
+            <ion-button color="primary" type="submit" expand="block">
+              Calcular
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-content>
+</ion-app>
