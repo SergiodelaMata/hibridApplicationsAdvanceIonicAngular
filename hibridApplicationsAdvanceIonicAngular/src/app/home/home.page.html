@@ -9,20 +9,38 @@
         </h1>
       </ion-text>
     </ion-row>
-    <form (ngSubmit)="calculate()">
+    <form [formGroup]="costForm" (ngSubmit)="calculate()">
       <ion-grid>
         <ion-row>
           <ion-col size-xs=12 size-sm=6 size-md=6 size-lg=4 size-xl=3 offset-lg=2 offset-xl=3>
             <ion-item color="dark">
               <ion-label>Importe total:</ion-label>
-              <ion-input type="number" [(ngModel)]="cost.totalImport" name="totalImport" required></ion-input>
+              <ion-input type="number" formControlName="totalImport" name="totalImport" required></ion-input>
             </ion-item>
+            <div *ngFor="let error of errorMessages.totalImport">
+              <ng-container *ngIf="costForm.get('totalImport').hasError(error.type) && (costForm.get('totalImport').dirty || costForm.get('totalImport').touched)">
+                <p class="error-message">
+                  <ion-text color="danger">
+                    <strong>{{error.message}}</strong>
+                  </ion-text>
+                </p>
+              </ng-container>
+            </div>
           </ion-col>
           <ion-col size-xs=12 size-sm=6 size-md=6 size-lg=4 size-xl=3>
             <ion-item color="dark">
               <ion-label>Nº comensales:</ion-label>
-              <ion-input type="number" [(ngModel)]="cost.numberPeople" name="numberPeople" required></ion-input>
+              <ion-input type="number" formControlName="numberPeople" name="numberPeople" required></ion-input>
             </ion-item>
+            <div *ngFor="let error of errorMessages.numberPeople">
+              <ng-container *ngIf="costForm.get('numberPeople').hasError(error.type) && (costForm.get('numberPeople').dirty || costForm.get('numberPeople').touched)">
+                <p class="error-message">
+                  <ion-text color="danger">
+                    <strong>{{error.message}}</strong>
+                  </ion-text>
+                </p>
+              </ng-container>
+            </div>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -33,7 +51,7 @@
                   Seleccione como desea introducir su propina:
                 </h3>
               </ion-text>
-              <ion-radio-group [(ngModel)]="selectedProp" (ionChange)="showSpecificDivProp($event)" name="prop">
+              <ion-radio-group formControlName="selectedProp" (ionChange)="showSpecificDivProp($event)" name="prop">
                 <ion-row>
                   <ion-col size=6>
                     <ion-item color="dark">
@@ -49,6 +67,15 @@
                   </ion-col>
                 </ion-row>
               </ion-radio-group>
+              <div *ngFor="let error of errorMessages.selectedProp">
+                <ng-container *ngIf="costForm.get('selectedProp').hasError(error.type) && (costForm.get('selectedProp').dirty || costForm.get('selectedProp').touched)">
+                  <p class="error-message">
+                    <ion-text color="danger">
+                      <strong>{{error.message}}</strong>
+                    </ion-text>
+                  </p>
+                </ng-container>
+              </div>
               <ion-list id="propRef" style="display:none;">
                 <ion-list-header>
                   <h6>
@@ -57,28 +84,8 @@
                 </ion-list-header>
                 <ion-item>
                   <ion-label>Porcentaje:</ion-label>
-                  <ion-select [(ngModel)]="cost.propPrefPercentage" name="propPrefPercentage" placeholder="0%">
-                    <ion-select-option value="0">0%</ion-select-option>
-                    <ion-select-option value="5">5%</ion-select-option>
-                    <ion-select-option value="10">10%</ion-select-option>
-                    <ion-select-option value="15">15%</ion-select-option>
-                    <ion-select-option value="20">20%</ion-select-option>
-                    <ion-select-option value="25">25%</ion-select-option>
-                    <ion-select-option value="30">30%</ion-select-option>
-                    <ion-select-option value="35">35%</ion-select-option>
-                    <ion-select-option value="40">40%</ion-select-option>
-                    <ion-select-option value="45">45%</ion-select-option>
-                    <ion-select-option value="50">50%</ion-select-option>
-                    <ion-select-option value="55">55%</ion-select-option>
-                    <ion-select-option value="60">60%</ion-select-option>
-                    <ion-select-option value="65">65%</ion-select-option>
-                    <ion-select-option value="70">70%</ion-select-option>
-                    <ion-select-option value="75">75%</ion-select-option>
-                    <ion-select-option value="80">80%</ion-select-option>
-                    <ion-select-option value="85">85%</ion-select-option>
-                    <ion-select-option value="90">90%</ion-select-option>
-                    <ion-select-option value="95">95%</ion-select-option>
-                    <ion-select-option value="100">100%</ion-select-option>
+                  <ion-select id="propPrefPercentage" formControlName="propPrefPercentage" name="propPrefPercentage" placeholder="0%">
+                    <ion-select-option *ngFor="let val of values" [value]=(val.value)>{{val.label}}</ion-select-option>
                   </ion-select>
                 </ion-item>
               </ion-list>
@@ -90,7 +97,7 @@
                 </ion-list-header>
                 <ion-item>
                   <ion-label>Porcentaje:</ion-label>
-                  <ion-range min="0" max="100" step="1" [(ngModel)]="cost.propRangePercentage" name="propRangePercentage" pin=true>
+                  <ion-range id="propRangePercentage" min="0" max="100" step="1" formControlName="propRangePercentage" name="propRangePercentage" pin=true>
                     <ion-label slot="start">0%</ion-label>
                     <ion-label slot="end">100%</ion-label>
                   </ion-range>
