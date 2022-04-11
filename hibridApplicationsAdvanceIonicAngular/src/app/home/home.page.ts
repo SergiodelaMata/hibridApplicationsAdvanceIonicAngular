@@ -1,5 +1,7 @@
 import { Component} from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { ModalController } from '@ionic/angular';
+import { ResultPage } from '../result/result.page';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +10,7 @@ import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms'
 })
 
 export class HomePage{
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private modalController: ModalController) {}
   values = [
     {value: 0, label: '0%'},
     {value: 5, label: '5%'},
@@ -116,12 +118,10 @@ export class HomePage{
   showSpecificDivProp(typeOperation){
     switch(typeOperation.detail.value){
       case 'propPref':
-        console.log('propPref');
         document.getElementById('propRef').style.display = 'block';
         document.getElementById('propRange').style.display = 'none';
         break;
       case 'propRange':
-        console.log('propRange');
         document.getElementById('propRef').style.display = 'none';
         document.getElementById('propRange').style.display = 'block';
         break;
@@ -156,9 +156,8 @@ export class HomePage{
         extraPay = totalImport * (propRangePercentage/100);
       }
       costPerUser = (totalImport + extraPay)/numberPeople;
+      this.sendDataResultModal(costPerUser, extraPay);
     }
-    console.log(totalImport, numberPeople, selectedProp, propPrefPercentage, propRangePercentage);
-    console.log(costPerUser, extraPay);
   } 
 
   reset() {
@@ -183,5 +182,16 @@ export class HomePage{
         control.markAsTouched();
       }
     }
+  }
+
+  async sendDataResultModal(costPerUser, extraPay) {
+    const modal = await this.modalController.create({
+      component: ResultPage,
+      componentProps: {
+        'costPerUser': costPerUser,
+        'extraPay': extraPay
+      }
+    });
+    return await modal.present();
   }
 }
