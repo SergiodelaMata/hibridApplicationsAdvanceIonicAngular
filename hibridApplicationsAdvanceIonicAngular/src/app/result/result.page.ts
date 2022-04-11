@@ -7,6 +7,9 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./result.page.scss'],
 })
 export class ResultPage implements OnInit {
+  @Input() totalImport: number;
+  @Input() numberPeople: number;
+  @Input() percentage: number;
   @Input() costPerUser: number;
   @Input() extraPay: number;
 

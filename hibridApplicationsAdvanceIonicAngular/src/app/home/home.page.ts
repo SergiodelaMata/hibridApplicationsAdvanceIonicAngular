@@ -134,6 +134,7 @@ export class HomePage{
     const selectedProp = this.selectedProp.value;
     const propPrefPercentage = this.propPrefPercentage.value;
     const propRangePercentage = this.propRangePercentage.value;
+    var percentage = 0;
     var costPerUser = 0;
     var extraPay = 0;
 
@@ -150,13 +151,26 @@ export class HomePage{
     }
     else{
       if(selectedProp === 'propPref'){
-        extraPay = totalImport * (propPrefPercentage/100);
+        extraPay = Math.round(totalImport * (propPrefPercentage))/100;
+        percentage = propPrefPercentage;
       }
       else if(selectedProp === 'propRange'){
-        extraPay = totalImport * (propRangePercentage/100);
+        extraPay = Math.round(totalImport * (propRangePercentage))/100;
+        percentage = propRangePercentage;
       }
-      costPerUser = (totalImport + extraPay)/numberPeople;
-      this.sendDataResultModal(costPerUser, extraPay);
+      costPerUser = Math.round((totalImport + extraPay)*100/numberPeople)/100;
+      var extraPayText = extraPay + '';
+      var costPerUserText = costPerUser + '';
+      if(Math.floor(extraPay*100%100).toString().charAt(1) === '0'){//Si el número solo tiene un decimal
+        extraPayText += '0';
+        console.log(extraPayText);
+      }
+      if(Math.floor(costPerUser*100%100).toString().charAt(1) === '0'){//Si el número solo tiene un decimal
+        costPerUserText += '0';
+        console.log(costPerUserText);
+      }
+      console.log(extraPayText, costPerUserText);
+      this.sendDataResultModal(totalImport, numberPeople, percentage, costPerUserText, extraPayText);
     }
   } 
 
@@ -184,10 +198,13 @@ export class HomePage{
     }
   }
 
-  async sendDataResultModal(costPerUser, extraPay) {
+  async sendDataResultModal(totalImport, numberPeople, percentage, costPerUser, extraPay) {
     const modal = await this.modalController.create({
       component: ResultPage,
       componentProps: {
+        'totalImport': totalImport,
+        'numberPeople': numberPeople,
+        'percentage': percentage,
         'costPerUser': costPerUser,
         'extraPay': extraPay
       }
