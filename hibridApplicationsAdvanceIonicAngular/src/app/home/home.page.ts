@@ -1,5 +1,5 @@
 import { Component} from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -93,23 +93,23 @@ export class HomePage{
 
   public errorMessages = {
     totalImport: [
-      { type: 'required', message: 'Total import is required' },
-      { type: 'min', message: 'Total import must be greater than 0' },
-      { type: 'max', message: 'Total import must be less than 10000' }
+      { type: 'required', message: 'El campo del importe total es un campo obligatorio' },
+      { type: 'min', message: 'El importe total debe ser superior a 0' },
+      { type: 'max', message: 'El importe total debe ser inferior a 10000' }
     ],
     numberPeople: [
-      { type: 'required', message: 'Number of people is required' },
-      { type: 'min', message: 'Number of people must be greater than 1' },
-      { type: 'max', message: 'Number of people must be less than 200' }
+      { type: 'required', message: 'El campo del número de comensales es un campo obligatorio' },
+      { type: 'min', message: 'El número de comensales debe ser mayor a 1' },
+      { type: 'max', message: 'El número de comensales debe ser menor a 200' }
     ],
     selectedProp: [
-      { type: 'required', message: 'Property type is required' }
+      { type: 'required', message: 'Es necesario haber seleccionado la forma en la que se desea introducir la propina' }
     ],
     propPrefPercentage: [
-      { type: 'pattern', message: 'Percentage must be between 0 and 100' }
+      { type: 'pattern', message: 'El porcentaje de la propina tiene que encontrarse entre 0 y 100 y entre las opciones disponibles para seleccionar' }
     ],
     propRangePercentage: [
-      { type: 'pattern', message: 'Percentage must be between 0 and 100' }
+      { type: 'pattern', message: 'El porcentaje de la propina tiene que encontrarse entre 0 y 100' }
     ]
   }
 
@@ -137,14 +137,16 @@ export class HomePage{
     var costPerUser = 0;
     var extraPay = 0;
 
+    this.showValidationMessage(this.costForm);
+
     if(!this.costForm.valid){
-      alert('Please fill all the fields correctly');
+      alert('El importe total, el número de comensales o la opción para seleccionar como se desea introducir el porcentaje de propina no han sido rellenados. Por favor, revise los campos marcados en rojo.');
     }
     else if(this.costForm.valid && (selectedProp === 'propPref' && propPrefPercentage === '')){
-      alert('Please fill the percentage of the property preference');
+      alert('No se ha introducido el porcentaje de propina. Por favor, seleccione un porcentaje para poder continuar.');
     }
     else if(this.costForm.valid && (selectedProp === 'propRange' && propRangePercentage === '')){
-      alert('Please fill the percentage of the property range');
+      alert('No se ha introducido el porcentaje de propina. Por favor, seleccione un porcentaje para poder continuar.');
     }
     else{
       if(selectedProp === 'propPref'){
@@ -165,5 +167,21 @@ export class HomePage{
 
   getErrorMessage(control: string) {
     return this.errorMessages[control];
+  }
+
+  showValidationMessage(formGroup: FormGroup) {
+    for (const key in formGroup.controls) 
+    {
+      if (formGroup.controls.hasOwnProperty(key)) 
+      {
+        const control: FormControl = <FormControl>formGroup.controls[key];
+        if (Object.keys(control).includes('controls')) 
+        {
+          const formGroupChild: FormGroup = <FormGroup>formGroup.controls[key];
+          this.showValidationMessage(formGroupChild);
+        }
+        control.markAsTouched();
+      }
+    }
   }
 }
