@@ -1,0 +1,2 @@
+Antes de iniciar este proyecto se deberán efectuar los siguiente paso:
+1.- Ejecutar el comando "npm install" en la subcarpeta del proyecto "hibridApplicationsAdvanceIonicAngular".
