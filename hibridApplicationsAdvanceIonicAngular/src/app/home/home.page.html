@@ -2,6 +2,7 @@
   <ion-header>
   </ion-header>
   <ion-content class="ion-padding" color="light">
+    <!--Título de la página-->
     <ion-row style="justify-content: center; align-items: center">
       <ion-text color="dark">
         <h1 style="text-align: center">
@@ -9,14 +10,17 @@
         </h1>
       </ion-text>
     </ion-row>
+    <!--Formulario para conocer el coste por persona-->
     <form [formGroup]="costForm" (ngSubmit)="calculate()">
       <ion-grid>
         <ion-row>
+          <!--Campo para introducir el importe total del consumo sin propina-->
           <ion-col size-xs=12 size-sm=6 size-md=6 size-lg=4 size-xl=3 offset-lg=2 offset-xl=3>
             <ion-item color="dark">
               <ion-label>Importe total:</ion-label>
               <ion-input type="number" formControlName="totalImport" name="totalImport" required></ion-input>
             </ion-item>
+            <!--Mensaje de error si no se ha introducido el importe de coste de lo que se debe pagar-->
             <div *ngFor="let error of errorMessages.totalImport">
               <ng-container *ngIf="costForm.get('totalImport').hasError(error.type) && (costForm.get('totalImport').dirty || costForm.get('totalImport').touched)">
                 <p class="error-message">
@@ -27,11 +31,13 @@
               </ng-container>
             </div>
           </ion-col>
+          <!--Campo para introducir el número de comensales-->
           <ion-col size-xs=12 size-sm=6 size-md=6 size-lg=4 size-xl=3>
             <ion-item color="dark">
               <ion-label>Nº comensales:</ion-label>
               <ion-input type="number" formControlName="numberPeople" name="numberPeople" required></ion-input>
             </ion-item>
+            <!--Mensaje de error si no se ha introducido el dato del número de comensales-->
             <div *ngFor="let error of errorMessages.numberPeople">
               <ng-container *ngIf="costForm.get('numberPeople').hasError(error.type) && (costForm.get('numberPeople').dirty || costForm.get('numberPeople').touched)">
                 <p class="error-message">
@@ -44,6 +50,7 @@
           </ion-col>
         </ion-row>
         <ion-row>
+          <!--Campo para seleccionar la forma para introducir la propina que se desea proporcionar-->
           <ion-col size-xs=12 size-sm=12 size-md=12 size-lg=8 size-xl=6 offset-lg=2 offset-xl=3>
             <ion-list>
               <ion-text color="dark">
@@ -53,12 +60,14 @@
               </ion-text>
               <ion-radio-group formControlName="selectedProp" (ionChange)="showSpecificDivProp($event)" name="prop">
                 <ion-row>
+                  <!--Opción para que aparezca el selector para seleccionar el porcentaje de la propina entre una serie de valores entre el 0% y 100% con saltos de un 5%-->
                   <ion-col size-xs=12 size-sm=6 size-md=6 size-lg=6 size-xl=6>
                     <ion-item color="dark">
                       <ion-label>Propinas prefijadas</ion-label>
                       <ion-radio value="propPref" name="propPref"></ion-radio>
                     </ion-item>
                   </ion-col>
+                  <!--Opción para que aparezca la barra lateral para seleccionar el porcentaje de la propina entre una serie de valores entre el 0% y 100% con saltos de un 1%-->
                   <ion-col size-xs=12 size-sm=6 size-md=6 size-lg=6 size-xl=6>
                     <ion-item color="dark">
                       <ion-label>Propinas en rango</ion-label>
@@ -67,6 +76,7 @@
                   </ion-col>
                 </ion-row>
               </ion-radio-group>
+              <!--Mensaje de error si no se ha seleccionado ninguna de las posibles opciones para introducir el porcentaje de la propina-->
               <div *ngFor="let error of errorMessages.selectedProp">
                 <ng-container *ngIf="costForm.get('selectedProp').hasError(error.type) && (costForm.get('selectedProp').dirty || costForm.get('selectedProp').touched)">
                   <p class="error-message">
@@ -76,6 +86,7 @@
                   </p>
                 </ng-container>
               </div>
+              <!--Selector para seleccionar el porcentaje de la propina entre una serie de valores entre el 0% y 100% con saltos de un 5%-->
               <ion-list id="propRef" style="display:none;">
                 <ion-list-header>
                   <h6>
@@ -89,6 +100,7 @@
                   </ion-select>
                 </ion-item>
               </ion-list>
+              <!--Barra lateral para seleccionar el porcentaje de la propina entre una serie de valores entre el 0% y 100% con saltos de un 1%-->
               <ion-list id="propRange" style="display:none;">
                 <ion-list-header>
                   <h6>
@@ -114,6 +126,7 @@
             </ion-list>
           </ion-col>
         </ion-row>
+        <!--Botón para efectuar el cálculo del importe a pagar por persona-->
         <ion-row>
           <ion-col col-xs=12 col-sm=12 size-md=8 size-lg=6 size-xl=4 offset-md=2 offset-lg=3 offset-xl=4>
             <ion-button color="primary" type="submit" expand="block">

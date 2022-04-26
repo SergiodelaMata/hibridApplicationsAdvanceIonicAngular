@@ -11,6 +11,7 @@ import { ResultPage } from '../result/result.page';
 
 export class HomePage{
   constructor(private formBuilder: FormBuilder, private modalController: ModalController) {}
+  //Valores del selector de porcentaje de propina
   values = [
     {value: 0, label: '0%'},
     {value: 5, label: '5%'},
@@ -38,61 +39,67 @@ export class HomePage{
     totalImport: ['', 
       [
         Validators.required, 
-        Validators.min(0), 
-        Validators.max(100000),
-        Validators.pattern('^[0].[0]?[1-9][0-9]?|[1-9][0-9]*(.[0]?[1-9][0-9]?)?$')
+        Validators.min(0), //Valida que el valor sea mayor que 0
+        Validators.max(100000), //Valida que el valor sea menor a 100000
+        Validators.pattern('^[0].[0]?[1-9][0-9]?|[1-9][0-9]*(.[0]?[1-9][0-9]?)?$')//Validación para que el campo solo acepte números con una posible coma decimal y dos decimales
       ]
     ],
     numberPeople: ['',
       [
         Validators.required, 
-        Validators.min(1), 
-        Validators.max(200),
-        Validators.pattern('^[1-9][0-9]?[0-9]?$')
+        Validators.min(1), //Valida que el valor sea mayor que 1
+        Validators.max(200), //Valida que el valor sea menor a 200
+        Validators.pattern('^[1-9][0-9]?[0-9]?$') //Validación para que el campo solo acepte números
       ]
     ],
     selectedProp: ['',
       [
         Validators.required, 
-        Validators.pattern('^(propPref|propRange)$')
+        Validators.pattern('^(propPref|propRange)$') //Validación para que el campo solo acepte propPref o propRange
       ]
     ],
     propPrefPercentage: ['',
       [
         Validators.min(0),
         Validators.max(100),
-        Validators.pattern('^1?[0-9]?[0|5]$')
+        Validators.pattern('^1?[0-9]?[0|5]$') //Validación para que el campo solo acepte números del 0 al 100 con saltos de 5 en 5
       ]
     ],
     propRangePercentage: ['',
       [
         Validators.min(0),
         Validators.max(100),
-        Validators.pattern('^[0-1]?[0-9]?[0-9]$')
+        Validators.pattern('^[0-1]?[0-9]?[0-9]$') //Validación para que el campo solo acepte números del 0 al 100 con saltos de 1 en 1
       ]
     ],
   });
 
+  //Proporciona el valor del importe total
   get totalImport() {
     return this.costForm.get('totalImport');
   }
 
+  //Proporciona el número de comensales
   get numberPeople() {
     return this.costForm.get('numberPeople');
   }
 
+  //Proporciona la opción seleccionada para introducir el porcentaje de propina
   get selectedProp() {
     return this.costForm.get('selectedProp');
   }
 
+  //Proporciona el porcentaje de propina del selector de porcentaje
   get propPrefPercentage() {
     return this.costForm.get('propPrefPercentage');
   }
 
+  //Proporciona el porcentaje de propina de la barra lateral de porcentaje
   get propRangePercentage() {
     return this.costForm.get('propRangePercentage');
   }
 
+  //Mensajes de error de los campos del formulario
   public errorMessages = {
     totalImport: [
       { type: 'required', message: 'El campo del importe total es un campo obligatorio' },
@@ -115,6 +122,7 @@ export class HomePage{
     ]
   }
 
+  //Método que muestra el contenido del selector o de la barra lateral de porcentaje dependiendo de la opción seleccionada
   showSpecificDivProp(typeOperation){
     switch(typeOperation.detail.value){
       case 'propPref':
@@ -128,6 +136,7 @@ export class HomePage{
     }
   }
 
+  //Realiza el cálculo del importe que debe realizar cada comensal a partir de los datos introducidos en el formulario
   calculate() {
     const totalImport = this.totalImport.value;
     const numberPeople = this.numberPeople.value;
@@ -140,24 +149,30 @@ export class HomePage{
 
     this.showValidationMessage(this.costForm);
 
+    //Comprueba si todos los campos obligatorios están rellenos y en caso contrario avisa de ello al usuario
     if(!this.costForm.valid){
       alert('El importe total, el número de comensales o la opción para seleccionar como se desea introducir el porcentaje de propina no han sido rellenados. Por favor, revise los campos marcados en rojo.');
     }
+    //Comprueba si se ha introducido un porcentaje en el selector de porcentaje de propina y en caso contrario lo avisa al usuario
     else if(this.costForm.valid && (selectedProp === 'propPref' && propPrefPercentage === '')){
       alert('No se ha introducido el porcentaje de propina. Por favor, seleccione un porcentaje para poder continuar.');
     }
+    //Comprueba si se ha introducido un porcentaje en la barra lateral de porcentaje de propina y en caso contrario lo avisa al usuario
     else if(this.costForm.valid && (selectedProp === 'propRange' && propRangePercentage === '')){
       alert('No se ha introducido el porcentaje de propina. Por favor, seleccione un porcentaje para poder continuar.');
     }
     else{
+      //Comprueba si se ha seleccionado la opción de introducir el porcentaje de propina en el selector de porcentaje de propina para obtener su dato del porcentaje de propina
       if(selectedProp === 'propPref'){
         extraPay = Math.round(totalImport * (propPrefPercentage))/100;
         percentage = propPrefPercentage;
       }
+      //Comprueba si se ha seleccionado la opción de introducir el porcentaje de propina en la barra lateral de porcentaje de propina para obtener su dato del porcentaje de propina
       else if(selectedProp === 'propRange'){
         extraPay = Math.round(totalImport * (propRangePercentage))/100;
         percentage = propRangePercentage;
       }
+      //Se obtiene el importe por comensal y se ajusta a 2 decimales
       costPerUser = Math.round((totalImport + extraPay)*100/numberPeople)/100;
       var extraPayText = extraPay + '';
       var costPerUserText = costPerUser + '';
@@ -174,14 +189,17 @@ export class HomePage{
     }
   } 
 
+  //Realiza la limpieza de los campos del formulario
   reset() {
     this.costForm.reset();
   }
 
+  //Función para mostrar los mensajes de error de los campos del formulario
   getErrorMessage(control: string) {
     return this.errorMessages[control];
   }
 
+  //Realiza una validación para ver si los elementos que forman parte del grupo del formulario no están vacíos
   showValidationMessage(formGroup: FormGroup) {
     for (const key in formGroup.controls) 
     {
@@ -198,6 +216,7 @@ export class HomePage{
     }
   }
 
+  //Establece el envío de los datos que se van a enviar a la siguiente página
   async sendDataResultModal(totalImport, numberPeople, percentage, costPerUser, extraPay) {
     const modal = await this.modalController.create({
       component: ResultPage,

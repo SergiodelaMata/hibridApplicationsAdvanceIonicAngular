@@ -7,6 +7,7 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./result.page.scss'],
 })
 export class ResultPage implements OnInit {
+  //Se obtienen los datos de la página anterior para luego introducirlos en la actual para que se muestren en la página de resultado
   @Input() totalImport: number;
   @Input() numberPeople: number;
   @Input() percentage: number;
@@ -18,6 +19,7 @@ export class ResultPage implements OnInit {
   ngOnInit() {
   }
 
+  //Establece el cierre de la página
   close() {
     this.modalController.dismiss();
   }
